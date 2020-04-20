@@ -1,5 +1,7 @@
 package xyz.huanju.tree.avl;
 
+import xyz.huanju.tree.bin.BinaryTree;
+
 /**
  * @author HuanJu
  */
@@ -18,8 +20,11 @@ public class AvlTree {
 
         /*
         1. 创建一个新节点newNode，值为node的值
-        2. 把新节点newNode的左子树设置成node节点的左子树
-        3. 把新节点newNode的右子树设置成node节点的右子树的左子树node.right.left
+        2. 把新节点newNode的左子树
+        设置成node节点的左子树
+        3. 把新节点newNode的右子树
+        设置成node节点的右子树的左子树
+        node.right.left
          */
         Node newNode = new Node(null, node.value, null);
         newNode.left = node.left;
@@ -131,45 +136,65 @@ public class AvlTree {
     }
 
 
-    private void add(Node parent, int value) {
-        if (value == parent.value) {
+    private void add(Node node, int value) {
+        if (value==node.value){
             System.out.println("节点已经存在");
-            return;
-        } else if (value < parent.value) {
-            if (parent.left == null) {
-                parent.left = new Node(null, value, null);
-            } else {
-                add(parent.left, value);
+        }else if (value<node.value){
+            /*
+            1.插入的值比节点的值小
+            1.1
+            左节点为空直接插入
+            1.2
+            左节点不为空
+            递归插入
+             */
+            if (node.left==null){
+                node.left=new Node(null,value,null);
+            }else {
+                add(node.left,value);
             }
-        } else {
-            if (parent.right == null) {
-                parent.right = new Node(null, value, null);
-            } else {
-                add(parent.right, value);
+        }else {
+            /*
+            2.插入的值比节点的值大
+            2.1
+            右节点为空直接插入
+            2.2
+            右节点不为空
+            递归插入
+             */
+            if (node.right==null){
+                node.right=new Node(null,value,null);
+            }else {
+                add(node.right,value);
             }
         }
+
+
+        /*
+        进行平衡插座
+         */
         //如果右子树高度-左子树高度大于1，进行左旋转
-        if (rightHeight(parent) - leftHeight(parent) > 1) {
-            if (parent.right != null && leftHeight(parent.right) > rightHeight(parent.right)) {
-                rightRotate(parent.right);
-                leftRotate(parent);
+        if (rightHeight(node) - leftHeight(node) > 1) {
+            if (node.right != null && leftHeight(node.right) > rightHeight(node.right)) {
+                rightRotate(node.right);
+                leftRotate(node);
             } else {
-                leftRotate(parent);
+                leftRotate(node);
             }
-        }else if (leftHeight(parent) - rightHeight(parent) > 1) {
+        }else if (leftHeight(node) - rightHeight(node) > 1) {
             /*
-            如果parent节点的左节点的右子树高度大于parent节点的左节点的左子树高度
+            如果node节点的左节点的右子树高度大于node节点的左节点的左子树高度
             进行左旋转
             再进行右旋转
              */
-            if (parent.left != null && rightHeight(parent.left) > leftHeight(parent.left)) {
-                leftRotate(parent.left);
-                rightRotate(parent);
+            if (node.left != null && rightHeight(node.left) > leftHeight(node.left)) {
+                leftRotate(node.left);
+                rightRotate(node);
             } else {
                 /*
                 否则直接进行右旋转
                  */
-                rightRotate(parent);
+                rightRotate(node);
             }
         }
 

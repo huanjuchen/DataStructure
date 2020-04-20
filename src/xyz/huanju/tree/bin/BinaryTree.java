@@ -1,5 +1,6 @@
 package xyz.huanju.tree.bin;
 
+
 /**
  * @author HuanJu
  */
@@ -8,44 +9,50 @@ public class BinaryTree {
     private Node root;
 
 
-    /**
-     * 添加
-     */
     public void add(int value) {
+        /*
+        根节点为空
+        直接添加到根节点
+         */
         if (this.root == null) {
             this.root = new Node(null, value, null);
-            return;
+        }else {
+            add(this.root,value);
         }
-        Node parent = this.root;
-        int vp = parent.value;
-        //找到添加位置的父节点
-        while (true) {
-            if (vp == value) {
-                System.out.println("节点已经存在");
-                return;
+    }
+
+
+    private void add(Node node, int value){
+        if (value==node.value){
+            System.out.println("节点已经存在");
+        }else if (value<node.value){
+            /*
+            1.插入的值比节点的值小
+            1.1
+            左节点为空直接插入
+            1.2
+            左节点不为空
+            递归插入
+             */
+            if (node.left==null){
+                node.left=new Node(null,value,null);
+            }else {
+                add(node.left,value);
             }
-            if (value < vp) {
-                Node left = parent.left;
-                if (left == null) {
-                    break;
-                } else {
-                    parent = parent.left;
-                    vp = parent.value;
-                }
-            } else {
-                Node right = parent.right;
-                if (right == null) {
-                    break;
-                } else {
-                    parent = parent.right;
-                    vp = parent.value;
-                }
+        }else {
+            /*
+            2.插入的值比节点的值大
+            2.1
+            右节点为空直接插入
+            2.2
+            右节点不为空
+            递归插入
+             */
+            if (node.right==null){
+                node.right=new Node(null,value,null);
+            }else {
+                add(node.right,value);
             }
-        }
-        if (value < vp) {
-            parent.left = new Node(null, value, null);
-        } else {
-            parent.right = new Node(null, value, null);
         }
     }
 
@@ -62,7 +69,8 @@ public class BinaryTree {
             return;
         }
         /*
-        1. 查找需要删除的节点targetNode
+        1. 查找需要删除
+        的节点targetNode
         没有找到则退出
          */
         Node targetNode = find(value);
@@ -70,15 +78,19 @@ public class BinaryTree {
             return;
         }
         /*
-        2. 查找targetNode的父节点
+        2. 查找targetNode
+        的父节点
          */
         Node parentNode = findParent(value);
         /*
         删除的节点是叶子节点
-        3.判断删除的节点targetNode是否是叶子节点
+        3.判断删除的节点
+        targetNode是否是叶子节点
         如果是就直接删除
-        3.1 判断targetNode是左子节点还是右子节点
-        3.2 将父节点的左子节点/右子节点置空
+        3.1 判断targetNode是
+        左子节点还是右子节点
+        3.2 将父节点的
+        左子节点/右子节点置空
          */
         if (targetNode.left == null && targetNode.right == null) {
             if (parentNode != null && parentNode.left.value == targetNode.value) {
@@ -91,6 +103,12 @@ public class BinaryTree {
         } else if (targetNode.left != null && targetNode.right != null) {
             /*
             4. 删除的节点targetNode有两个子节点
+            把右子树的
+            最小节点的值取出
+            并删除最小节点
+
+            并把targetNode
+            的值替换为取出的值
              */
             int minVal=delRightTreeMin(targetNode.right);
             targetNode.value=minVal;
@@ -101,8 +119,14 @@ public class BinaryTree {
              5. 删除的节点targetNode只有一个子节点
              5.1 targetNode有左子节点
              5.1.1 要删除的是根节点
-             5.1.2 删除的节点targetNode 是parentNode的左子节点
-             5.1.3 删除的节点targetNode 是parentNode的右子节点
+             5.1.2 删除的节点targetNode
+             是parentNode的左子节点
+             5.1.3 删除的节点targetNode
+             是parentNode的右子节点
+
+             即直接把targetNode
+             的左/右子节点替换到
+             targetNode的位置
              */
             if (targetNode.left != null) {
                 if (parentNode == null) {
@@ -129,7 +153,8 @@ public class BinaryTree {
     }
 
     /**
-     * 查找以node为根节点的二叉排序树的最小节点的值
+     * 查找以node为根节点的
+     * 二叉排序树的最小节点的值
      * 并删除node
      */
     public int delRightTreeMin(Node node){
@@ -137,10 +162,8 @@ public class BinaryTree {
         while (target.left!=null){
             target=target.left;
         }
-
         del(target.value);
         return target.value;
-
     }
 
     /**
@@ -222,22 +245,22 @@ public class BinaryTree {
     /**
      * 中序遍历
      */
-    public void midOrder() {
+    public void inOrder() {
         if (this.root != null) {
-            midOrder(this.root);
+            inOrder(this.root);
             System.out.println();
         } else {
             System.out.println("二叉树为空");
         }
     }
 
-    private void midOrder(Node node) {
+    private void inOrder(Node node) {
         if (node.left != null) {
-            midOrder(node.left);
+            inOrder(node.left);
         }
         System.out.print(node.value + "\t");
         if (node.right != null) {
-            midOrder(node.right);
+            inOrder(node.right);
         }
     }
 

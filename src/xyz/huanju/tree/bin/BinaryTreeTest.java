@@ -23,13 +23,13 @@ public class BinaryTreeTest {
 //        binaryTree.postOder();
 
         System.out.println("删除前");
-        binaryTree.midOrder();
+        binaryTree.inOrder();
 
         binaryTree.del(7);
 
 
         System.out.println("删除后");
-        binaryTree.midOrder();
+        binaryTree.inOrder();
 
 
 
